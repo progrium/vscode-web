@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Build VSCode artifact
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build VSCode Web
+        run: make
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: vscode-web
+          path: dist/
