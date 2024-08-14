@@ -7,8 +7,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      deployments: write
+      contents: write
     name: Build VSCode Web artifact
     steps:
       - name: Checkout
