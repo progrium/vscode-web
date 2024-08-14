@@ -9,13 +9,13 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    name: Build VSCode Web artifact
+    name: Build patched VSCode Web artifact
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build VSCode Web
-        run: make vscode-web-artifact
+      - name: Build VSCode Web patched
+        run: make vscode-web-patched-artifact
 
       - name: Upload Release Artifact
         uses: ncipollo/release-action@v1
