@@ -18,11 +18,11 @@ jobs:
         run: make vscode-web-patched
 
       - name: Compress Artifact
-        run: zip -r vscode-web.zip ./dist/vscode
+        run: zip -r vscode-web-1.92.1-patched.zip ./dist/vscode
 
       - name: Upload Release Artifact
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.action_ref }}
           allowUpdates: true
-          artifacts: "vscode-web.zip"
+          artifacts: "vscode-web*.zip"
