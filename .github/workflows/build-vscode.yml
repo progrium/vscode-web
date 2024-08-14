@@ -14,11 +14,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build VSCode Web
-        run: make
+      - name: Build VSCode Web patched
+        run: make vscode-web-patched
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Compress Artifact
+        run: zip -r vscode-web.zip ./dist/vscode
+
+      - name: Upload Release Artifact
+        uses: ncipollo/release-action@v1
         with:
-          name: vscode-web
-          path: dist/
+          tag: ${{ github.action_ref }}
+          allowUpdates: true
+          artifacts: "vscode-web.zip"
