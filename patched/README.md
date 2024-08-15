@@ -1,4 +1,10 @@
 
+### index.html
+* based on `src/vs/code/browser/workbench/workbench.html`
+* uses "modules" instead of "node_modules" for `webPackagePaths`
+* add a *synchronous* fetch of workbench.json and set as value to meta tag with id `vscode-workbench-web-configuration`
+	* this lets stock workbench.ts pick it up as workbench config
+
 ### extensionHostWorker.ts
 * remove blocking of `postMessage` and `addEventListener`
     * lets extension send MessageChannel port up to host page
@@ -7,47 +13,8 @@
 * add support for a `_port` message
     * lets extension send MessageChannel port up to host page
 * remove hostname validation
-    * not sure how it would run on a hostname with the validation marker
-
-    
-* possibly need to re-remove from `function start() {` to `worker.postMessage('vs/workbench/api/worker/extensionHostWorker');`:
-```
-
-		// Before we can load the worker, we need to get the current set of NLS
-		// configuration into this iframe. We ask the parent window to send it
-		// together with the necessary information to load the worker via Blob.
-
-		const bootstrapNlsType = 'vscode.bootstrap.nls';
-
-		self.onmessage = (event) => {
-			if (event.origin !== parentOrigin || event.data.type !== bootstrapNlsType) {
-				return;
-			}
-			const { data } = event.data;
-			createWorker(data.baseUrl, data.workerUrl, data.nls.messages, data.nls.language);
-		};
-
-		window.parent.postMessage({
-			vscodeWebWorkerExtHostId,
-			type: bootstrapNlsType
-		}, '*');
-	}
-
-	function createWorker(baseUrl, workerUrl, nlsMessages, nlsLanguage) {
-		try {
-			if (globalThis.crossOriginIsolated) {
-				workerUrl += '?vscode-coi=2'; // COEP
-			}
-
-			const blob = new Blob([[
-				`/*extensionHostWorker*/`,
-				`globalThis.MonacoEnvironment = { baseUrl: '${baseUrl}' };`,
-				// VSCODE_GLOBALS: NLS
-				`globalThis._VSCODE_NLS_MESSAGES = ${JSON.stringify(nlsMessages)};`,
-				`globalThis._VSCODE_NLS_LANGUAGE = ${JSON.stringify(nlsLanguage)};`,
-				`importScripts('${workerUrl}');`,
-				`/*extensionHostWorker*/`
-			].join('')], { type: 'application/javascript' });
-
-			const worker = new Worker(URL.createObjectURL(blob), { name });
-```
+    * not sure how this works but seems like it wouldn't
+	* perhaps it could be left in...
+* NOTE: any changes to script requires recomputing the integrity hash of script-src on CSP
+	* copy contents of innerHTML of script (including whitespace up to tags) to ./script.txt
+	* run `openssl dgst -sha256 -binary ./script.txt | openssl base64 -A` to get value after `sha256-`

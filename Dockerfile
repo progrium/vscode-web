@@ -7,7 +7,7 @@ WORKDIR /vscode
 RUN yarn
 RUN yarn gulp vscode-web-min
 
-# Rename node_modules under dist to modules.
+# Rename node_modules under output to modules.
 # Some CDNs and hosts strip node_modules.
 RUN mv /vscode-web/node_modules /vscode-web/modules
 
