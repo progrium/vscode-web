@@ -1,15 +1,10 @@
-FROM node:20-alpine
-ARG VERSION=main
+FROM node:22-alpine
 RUN apk add -u krb5-dev libx11-dev libxkbfile-dev libsecret-dev git build-base python3
-RUN git clone --depth 1 https://github.com/microsoft/vscode.git -b ${VERSION}
+ARG VSCODE_VERSION=1.103.2
+RUN git clone --depth 1 https://github.com/microsoft/vscode.git -b $VSCODE_VERSION
 WORKDIR /vscode
-
-RUN yarn
-RUN yarn gulp vscode-web-min
-
-# Rename node_modules under output to modules.
-# Some CDNs and hosts strip node_modules.
-RUN mv /vscode-web/node_modules /vscode-web/modules
+RUN npm i
+RUN npm run gulp vscode-web-min
 
 # For use with `docker run -v ./dist:/dist ...`
 CMD cp -r /vscode-web/* /dist
