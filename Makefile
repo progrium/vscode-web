@@ -1,5 +1,5 @@
 
-VERSION=1.103.2
+VERSION=1.108.2
 
 vscode-web:
 	rm -rf ./dist && mkdir -p ./dist/vscode	
